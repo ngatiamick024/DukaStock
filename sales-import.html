@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DukaStock Sales Import</title>
+</head>
+<body>
+    <h2>Import DukaStock Sales History</h2>
+
+    <input type="file" id="salesFile" accept=".txt">
+
+    <button onclick="importSales()">Import Sales</button>
+
+    <p id="message"></p>
+
+    <script>
+        function importSales() {
+            const file = document.getElementById("salesFile").files[0];
+            const message = document.getElementById("message");
+
+            if (!file) {
+                message.textContent = "Please select your sales backup file.";
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                try {
+                    const sales = JSON.parse(event.target.result);
+
+                    if (!Array.isArray(sales)) {
+                        throw new Error("Invalid sales data");
+                    }
+
+                    localStorage.setItem(
+                        "dukastock-sales",
+                        JSON.stringify(sales)
+                    );
+
+                    message.textContent =
+                        "Success! Imported " + sales.length + " sales records.";
+                } catch (error) {
+                    message.textContent = "Import failed. Check your backup file.";
+                }
+            };
+
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
