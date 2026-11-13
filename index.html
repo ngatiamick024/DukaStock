@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DukaStock - Shop Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-layout ">
+
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">D</div>
+            <div>
+                <h2>DukaStock</h2>
+                <span>SHOP MANAGER</span>
+            </div>
+        </div>
+
+        <p class="nav-heading">MAIN MENU</p>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-link active">
+                <span class="nav-icon">▦</span> Dashboard
+            </a>
+            <a href="products.html" class="nav-link">
+                <span class="nav-icon">▤</span> Products & Stock
+            </a>
+            <a href="sales.html" class="nav-link">
+                <span class="nav-icon">↗</span> Sales
+            </a>
+            <a href="reports.html" class="nav-link">
+                <span class="nav-icon">▥</span> Reports
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="footer-icon">KSh</div>
+            <div>
+                <strong>Made for Kenya</strong>
+                <span>Simple shop management</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Workspace / Dashboard</p>
+                <h2>Shop Dashboard</h2>
+            </div>
+
+            <div class="shop-status">
+                <span class="status-dot"></span>
+                Stock management
+            </div>
+        </header>
+
+        <section class="welcome-section">
+            <div>
+
+        
+       <div class="page-intro">
+          <p class="eyebrow">YOUR BUSINESS AT A GLANCE</p>
+          <h1>Welcome back!</h1>
+          <p>Here's an overview of how your shop is performing.</p>
+       </div>
+
+        
+        <section class="section-heading">
+            <div>
+                <h2>Overview</h2>
+                <p>Here's how your shop is performing today.</p>
+            </div>
+        </section>
+
+        <section class="dashboard">
+            <div class="card">
+                <div class="card-top">
+                    <span class="card-icon products-icon">▤</span>
+                    <span class="card-tag">Inventory</span>
+                </div>
+                <h3>Total Products</h3>
+                <p class="number">0</p>
+                <p class="card-note">Products in your shop</p>
+            </div>
+
+            <div class="card">
+                <div class="card-top">
+                    <span class="card-icon sales-icon">↗</span>
+                    <span class="card-tag">Today</span>
+                </div>
+                <h3>Today's Sales</h3>
+                <p class="number">KSh 0</p>
+                <p class="card-note">Total sales recorded today</p>
+            </div>
+
+            <div class="card">
+                <div class="card-top">
+                    <span class="card-icon profit-icon">↗</span>
+                    <span class="card-tag">Today</span>
+                </div>
+                <h3>Today's Profit</h3>
+                <p class="number">KSh 0</p>
+                <p class="card-note">Profit from recorded sales</p>
+            </div>
+
+             <div class="card" id="low-stock-card">
+                <div class="card-top">
+                    <span class="card-icon stock-icon">!</span>
+                    <span class="card-tag">Attention</span>
+                </div>
+                <h3>Low Stock</h3>
+                <p class="number">0</p>
+                <p class="card-note">Products needing attention</p>
+            </div>
+
+             <div class="card" id="restocking-alerts-card">
+                <div class="card-top">
+                    <span class="card-icon alert-icon">↻</span>
+                    <span class="card-tag">Restock</span>
+                </div>
+                <h3>Restocking Alerts</h3>
+                <p class="number" id="restocking-alerts-count">0</p>
+                <p class="card-note">Products to replenish</p>
+            </div>
+        </section>
+
+        <section class="quick-actions-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Quick Actions</h2>
+                    <p>Get things done faster.</p>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <a href="products.html" class="action-card">
+                    <span class="action-icon">＋</span>
+                    <span>
+                        <strong>Manage Products</strong>
+                        <small>Add, edit, and monitor stock</small>
+                    </span>
+                    <span class="action-arrow">→</span>
+                </a>
+
+                <a href="sales.html" class="action-card">
+                    <span class="action-icon">↗</span>
+                    <span>
+                        <strong>Record a Sale</strong>
+                        <small>Record sales and update stock</small>
+                    </span>
+                    <span class="action-arrow">→</span>
+                </a>
+
+                <a href="reports.html" class="action-card">
+                    <span class="action-icon">▥</span>
+                    <span>
+                        <strong>View Reports</strong>
+                        <small>Review sales and profit</small>
+                    </span>
+                    <span class="action-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            DukaStock · Simple stock management for Kenyan shops
+        </footer>
+
+    </main>
+
+   <script src="script.js"></script>
+</body>
+</html>

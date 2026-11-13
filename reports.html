@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DukaStock - Reports</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">D</div>
+            <div>
+                <h2>DukaStock</h2>
+                <span>SHOP MANAGER</span>
+            </div>
+        </div>
+
+        <p class="nav-heading">MAIN MENU</p>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-link">
+                <span class="nav-icon">▦</span> Dashboard
+            </a>
+            <a href="products.html" class="nav-link">
+                <span class="nav-icon">▤</span> Products & Stock
+            </a>
+            <a href="sales.html" class="nav-link">
+                <span class="nav-icon">↗</span> Sales
+            </a>
+            <a href="reports.html" class="nav-link active">
+                <span class="nav-icon">▥</span> Reports
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="footer-icon">KSh</div>
+            <div>
+                <strong>Made for Kenya</strong>
+                <span>Simple shop management</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Workspace / Reports</p>
+                <h2>Business Reports</h2>
+            </div>
+
+            <div class="shop-status">
+                <span class="status-dot"></span>
+                Business performance
+            </div>
+        </header>
+
+        <section class="page-intro">
+            <div>
+                <p class="welcome-label">BUSINESS INSIGHTS</p>
+                <h1>Sales & Profit Reports</h1>
+                <p>Understand your sales, product costs, and gross profit.</p>
+            </div>
+        </section>
+
+        <section class="inventory-panel report-panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Daily Profit Report</h2>
+                    <p>A summary of your recorded sales and their costs.</p>
+                </div>
+                <span class="section-icon">▥</span>
+            </div>
+
+            <div id="daily-profit-report" class="report-grid">
+
+                <div class="report-card">
+                    <span class="report-label">Total Sales</span>
+                    <p class="report-value">
+                        KSh <span id="report-total-sales">0.00</span>
+                    </p>
+                    <small>Revenue from recorded sales</small>
+                </div>
+
+                <div class="report-card">
+                    <span class="report-label">Cost of Goods Sold</span>
+                    <p class="report-value">
+                        KSh <span id="report-total-cost">0.00</span>
+                    </p>
+                    <small>Buying cost of items sold</small>
+                </div>
+
+                <div class="report-card profit-report-card">
+                    <span class="report-label">Gross Profit</span>
+                    <p class="report-value">
+                        KSh <span id="report-gross-profit">0.00</span>
+                    </p>
+                    <small>Sales minus product costs</small>
+                </div>
+
+                <div class="report-card">
+                    <span class="report-label">Items Sold</span>
+                    <p class="report-value">
+                        <span id="report-items-sold">0</span>
+                    </p>
+                    <small>Total units sold</small>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="inventory-panel sales-history-panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Sales History</h2>
+                    <p>Review your recorded transactions.</p>
+                </div>
+                <span class="section-icon">↗</span>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="sales-history">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Sale Price</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-history-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            DukaStock · Simple stock management for Kenyan shops
+        </footer>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

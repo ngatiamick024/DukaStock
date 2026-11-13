@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DukaStock - Sales</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="app-layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">D</div>
+            <div>
+                <h2>DukaStock</h2>
+                <span>SHOP MANAGER</span>
+            </div>
+        </div>
+
+        <p class="nav-heading">MAIN MENU</p>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-link">
+                <span class="nav-icon">▦</span> Dashboard
+            </a>
+            <a href="products.html" class="nav-link">
+                <span class="nav-icon">▤</span> Products & Stock
+            </a>
+            <a href="sales.html" class="nav-link active">
+                <span class="nav-icon">↗</span> Sales
+            </a>
+            <a href="reports.html" class="nav-link">
+                <span class="nav-icon">▥</span> Reports
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="footer-icon">KSh</div>
+            <div>
+                <strong>Made for Kenya</strong>
+                <span>Simple shop management</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="breadcrumb">Workspace / Sales</p>
+                <h2>Sales Management</h2>
+            </div>
+
+            <div class="shop-status">
+                <span class="status-dot"></span>
+                Sales tracking
+            </div>
+        </header>
+
+        <section class="page-intro">
+            <div>
+                <p class="welcome-label">SALES MANAGEMENT</p>
+                <h1>Record and track sales</h1>
+                <p>Record customer purchases, update stock automatically, and review past sales.</p>
+            </div>
+        </section>
+
+        <section class="inventory-panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Record a Sale</h2>
+                    <p>Enter the product name and quantity sold.</p>
+                </div>
+                <span class="section-icon">↗</span>
+            </div>
+
+            <form id="sales-form" class="sales-form">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="sale-product">Product Name</label>
+                        <input
+                            type="text"
+                            id="sale-product"
+                            placeholder="e.g. Sugar"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="sale-quantity">Quantity Sold</label>
+                        <input
+                            type="number"
+                            id="sale-quantity"
+                            placeholder="e.g. 2"
+                            min="1"
+                            step="1"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Complete Sale</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="inventory-panel sales-history-panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Sales History</h2>
+                    <p>Review the sales you have recorded.</p>
+                </div>
+                <span class="section-icon">▤</span>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="sales-history">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Sale Price</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-history-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            DukaStock · Simple stock management for Kenyan shops
+        </footer>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
