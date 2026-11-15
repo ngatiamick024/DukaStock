@@ -19,9 +19,10 @@ try {
     savedProducts = [];
 }
 
+
 let products = savedProducts.map(function(product) {
     return {
-         ...product,
+        ...product,
         id: product.id || crypto.randomUUID(),
         price: Number(product.price) || 0,
         buyingCost: Number(product.buyingCost) || 0,
@@ -32,8 +33,112 @@ let products = savedProducts.map(function(product) {
     };
 });
 
-function saveProducts() {
-    localStorage.setItem("dukastock-products", JSON.stringify(products));
+async function saveProducts() {
+    // Save products on this device
+    localStorage.setItem(
+        "dukastock-products",
+        JSON.stringify(products)
+    );
+
+    try {
+        const { data: userData, error: userError } =
+            await supabaseClient.auth.getUser();
+
+        if (userError || !userData.user) {
+            throw new Error("User is not logged in.");
+        }
+
+        const cloudProducts = products.map(function(p) {
+            return {
+                id: p.id,
+                user_id: userData.user.id,
+                name: p.name,
+                price: Number(p.price),
+                buying_cost: Number(p.buyingCost || 0),
+                quantity: Number(p.quantity),
+                expiry_date: p.expiryDate || null,
+                alert_level: Number(p.alertLevel ?? 5),
+                target_stock: Number(p.targetStock ?? 20)
+            };
+        });
+
+        if (cloudProducts.length > 0) {
+            const { error } = await supabaseClient
+                .from("products")
+                .upsert(cloudProducts);
+
+            if (error) throw error;
+        }
+
+        console.log("Products saved to cloud successfully.");
+
+    } catch (error) {
+        console.error("Cloud product saving failed:", error);
+    }
+}
+
+async function loadCloudData() {
+    const { data: userData, error: userError } =
+        await supabaseClient.auth.getUser();
+
+    if (userError || !userData.user) {
+        throw new Error("Could not verify your login.");
+    }
+
+    const { data: cloudProducts, error: productsError } =
+        await supabaseClient
+            .from("products")
+            .select("*")
+            .order("created_at", { ascending: true });
+
+    if (productsError) throw productsError;
+
+    const { data: cloudSales, error: salesError } =
+        await supabaseClient
+            .from("sales")
+            .select("*")
+            .order("created_at", { ascending: true });
+
+    if (salesError) throw salesError;
+
+    products = cloudProducts.map(function(p) {
+        return {
+            id: p.id,
+            name: p.name,
+            price: Number(p.price),
+            buyingCost: Number(p.buying_cost),
+            quantity: Number(p.quantity),
+            expiryDate: p.expiry_date || "",
+            alertLevel: Number(p.alert_level ?? 5),
+            targetStock: Number(p.target_stock ?? 20)
+        };
+    });
+
+    const sales = cloudSales.map(function(s) {
+        return {
+            id: s.id,
+            productName: s.product_name,
+            quantity: Number(s.quantity),
+            price: Number(s.price),
+            buyingCost: Number(s.buying_cost),
+            date: s.sale_date
+        };
+    });
+
+    localStorage.setItem(
+        "dukastock-products",
+        JSON.stringify(products)
+    );
+
+    localStorage.setItem(
+        "dukastock-sales",
+        JSON.stringify(sales)
+    );
+
+    console.log("Cloud data loaded:", {
+        products: products.length,
+        sales: sales.length
+    });
 }
 
 function getExpiryStatus(expiryDate) {
@@ -288,13 +393,28 @@ function displayProducts() {
         deleteButton.className = "product-delete-button";
         deleteButton.textContent = "Delete";
 
-        deleteButton.addEventListener("click", function() {
-            if (confirm("Are you sure you want to delete " + product.name + "?")) {
-                products.splice(index, 1);
-                saveProducts();
-                displayProducts();
-            }
-        });
+       deleteButton.addEventListener("click", async function() {
+    if (confirm("Are you sure you want to delete " + product.name + "?")) {
+
+        const deletedProduct = products[index];
+
+        products.splice(index, 1);
+        saveProducts();
+        displayProducts();
+
+        const { error } = await supabaseClient
+            .from("products")
+            .delete()
+            .eq("id", deletedProduct.id);
+
+        if (error) {
+            console.error("Cloud deletion failed:", error);
+            alert("Product deleted on this device, but cloud deletion failed.");
+        } else {
+            console.log("Product deleted from cloud successfully.");
+        }
+    }
+});
 
         actions.appendChild(editButton);
         actions.appendChild(deleteButton);
@@ -312,7 +432,7 @@ function displayProducts() {
 const salesForm = document.getElementById("sales-form");
 
 if (salesForm) {
-    salesForm.addEventListener("submit", function(event) {
+    salesForm.addEventListener("submit", async function(event) {
         event.preventDefault();
 
         const productNameInput = document.getElementById("sale-product");
@@ -349,18 +469,49 @@ if (salesForm) {
             sales = [];
         }
 
-        
-        sales.push({
+        const newSale = {
             id: crypto.randomUUID(),
             productName: product.name,
             quantity: quantitySold,
             price: Number(product.price),
             buyingCost: Number(product.buyingCost || 0),
             date: new Date().toLocaleString()
-        });
+        };
+
+        sales.push(newSale);
 
         localStorage.setItem("dukastock-sales", JSON.stringify(sales));
-        saveProducts();
+
+        await saveProducts();
+
+        try {
+            const { data: userData, error: userError } =
+                await supabaseClient.auth.getUser();
+
+            if (userError || !userData.user) {
+                throw new Error("User is not logged in.");
+            }
+
+            const { error } = await supabaseClient
+                .from("sales")
+                .insert({
+                    id: newSale.id,
+                    user_id: userData.user.id,
+                    product_name: newSale.productName,
+                    quantity: newSale.quantity,
+                    price: newSale.price,
+                    buying_cost: newSale.buyingCost,
+                    sale_date: newSale.date
+                });
+
+            if (error) throw error;
+
+            console.log("Sale saved to cloud successfully.");
+
+        } catch (error) {
+            console.error("Cloud sale saving failed:", error);
+            alert("Sale saved on this device, but cloud saving failed. Please check your internet connection.");
+        }
 
         displayProducts();
         displaySalesHistory();
@@ -486,9 +637,47 @@ const todaysSales = sales.filter(function(sale) {
 }
 
 // Initial page render
-saveProducts();
-displayProducts();
-displaySalesHistory();
+loadCloudData()
+    .then(function() {
+        displayProducts();
+        displaySalesHistory();
+
+        supabaseClient
+            .channel("dukastock-live-sync")
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "products"
+                },
+                async function() {
+                    await loadCloudData();
+                    displayProducts();
+                    displaySalesHistory();
+                    console.log("Products synchronized.");
+                }
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "sales"
+                },
+                async function() {
+                    await loadCloudData();
+                    displayProducts();
+                    displaySalesHistory();
+                    console.log("Sales synchronized.");
+                }
+            )
+            .subscribe();
+    })
+    .catch(function(error) {
+        console.error("Cloud loading failed:", error);
+        alert("Could not load cloud data. Check your internet connection.");
+    });
 
 
 // Make dashboard alert cards clickable
