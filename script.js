@@ -1,3 +1,5 @@
+window.dukaAuthReady.then(function(isLoggedIn) {
+    if (!isLoggedIn) return; 
 
  // DukaStock - Main JavaScript
 
@@ -19,7 +21,8 @@ try {
 
 let products = savedProducts.map(function(product) {
     return {
-        ...product,
+         ...product,
+        id: product.id || crypto.randomUUID(),
         price: Number(product.price) || 0,
         buyingCost: Number(product.buyingCost) || 0,
         quantity: Number(product.quantity) || 0,
@@ -90,6 +93,7 @@ if (productForm) {
         }
 
         products.push({
+            id: crypto.randomUUID(),
             name: name,
             price: price,
             buyingCost: buyingCost,
@@ -345,7 +349,9 @@ if (salesForm) {
             sales = [];
         }
 
+        
         sales.push({
+            id: crypto.randomUUID(),
             productName: product.name,
             quantity: quantitySold,
             price: Number(product.price),
@@ -370,6 +376,14 @@ function displaySalesHistory() {
     try {
         const storedSales = JSON.parse(localStorage.getItem("dukastock-sales"));
         sales = Array.isArray(storedSales) ? storedSales : [];
+        sales = sales.map(function(sale) {
+    return {
+        ...sale,
+        id: sale.id || crypto.randomUUID()
+    };
+});
+
+localStorage.setItem("dukastock-sales", JSON.stringify(sales));
     } catch (error) {
         sales = [];
     }
@@ -476,5 +490,32 @@ saveProducts();
 displayProducts();
 displaySalesHistory();
 
+
+// Make dashboard alert cards clickable
+const lowStockCard = document.getElementById("low-stock-card");
+const restockingCard = document.getElementById("restocking-alerts-card");
+
+if (lowStockCard) {
+    lowStockCard.style.cursor = "pointer";
+
+    lowStockCard.addEventListener("click", function() {
+        window.location.href = "products.html";
+    });
+}
+
+if (restockingCard) {
+    restockingCard.style.cursor = "pointer";
+
+    restockingCard.addEventListener("click", function() {
+        const alertsList = document.getElementById("restocking-alerts-list");
+
+        if (alertsList) {
+            alertsList.scrollIntoView({ behavior: "smooth" });
+        } else {
+            window.location.href = "products.html";
+        }
+    });
+}
+});
 
 
