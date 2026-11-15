@@ -377,12 +377,34 @@ function displaySalesHistory() {
     const salesHistoryBody = document.getElementById("sales-history-body");
     if (salesHistoryBody) salesHistoryBody.innerHTML = "";
 
-    const today = new Date().toLocaleDateString();
+    const today = new Date();
 
-    const todaysSales = sales.filter(function(sale) {
-        return new Date(sale.date).toLocaleDateString() === today;
-    });
+const todaysSales = sales.filter(function(sale) {
+    const parts = sale.date.match(
+        /^(\d{1,2})\/(\d{1,2})\/(\d{4})/
+    );
 
+    if (!parts) return false;
+
+    let day;
+    let month;
+
+    if (Number(parts[2]) > 12) {
+        month = Number(parts[1]);
+        day = Number(parts[2]);
+    } else {
+        day = Number(parts[1]);
+        month = Number(parts[2]);
+    }
+
+    const saleDate = new Date(
+        Number(parts[3]),
+        month - 1,
+        day
+    );
+
+    return saleDate.toDateString() === today.toDateString();
+});
     const totalSales = todaysSales.reduce(function(total, sale) {
         return total + Number(sale.price || 0) * Number(sale.quantity || 0);
     }, 0);
